@@ -17,7 +17,22 @@ build:
   script:
     - cd src
     - go-licenses save . --save_path ../library_licenses
-    - go build -v -o $PREFIX/bin/cern-sso-cli -ldflags="-X main.version=${{ version }} -s -w"
+    - if: linux
+      then: go build -v -o $PREFIX/bin/cern-sso-cli -ldflags="-X main.version=${{ version }} -s -w"
+    - if: osx
+      then:
+        - go mod download
+        - export FIDO2_MOD=$(go env GOPATH)/pkg/mod/$(go list -m -f '{{.Path}}@{{.Version}}' github.com/keys-pub/go-libfido2)
+        - chmod -R u+w ${FIDO2_MOD}
+        # Patch go-libfido2 to add build constraints to static files (upstream bug)
+        - echo '//go:build !dynamic' | cat - ${FIDO2_MOD}/fido2_static_amd64.go > /tmp/fido2_static_amd64.go && mv /tmp/fido2_static_amd64.go ${FIDO2_MOD}/fido2_static_amd64.go
+        - echo '//go:build !dynamic' | cat - ${FIDO2_MOD}/fido2_static_arm64.go > /tmp/fido2_static_arm64.go && mv /tmp/fido2_static_arm64.go ${FIDO2_MOD}/fido2_static_arm64.go
+        # Fix go-libfido2 paths to use conda-forge prefix
+        - sed -i '' "s|-L/usr/local/lib|-L${PREFIX}/lib|g" ${FIDO2_MOD}/fido2_dynamic.go
+        - sed -i '' "s|-I/usr/local/include|-I${PREFIX}/include|g" ${FIDO2_MOD}/fido2_dynamic.go
+        - sed -i '' "s|-I/usr/local/opt/openssl/include|-I${PREFIX}/include|g" ${FIDO2_MOD}/fido2_dynamic.go
+        - go clean -cache
+        - go build -tags dynamic -v -o $PREFIX/bin/cern-sso-cli -ldflags="-X main.version=${{ version }} -s -w"
     - chmod -R u+w $(go env GOPATH) && rm -r $(go env GOPATH)
     - export CERN_SSO_CLI=$PREFIX/bin/cern-sso-cli
     # Set library path so the binary can find libfido2 at build time
