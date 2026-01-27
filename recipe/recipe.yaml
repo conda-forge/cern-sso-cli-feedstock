@@ -43,6 +43,10 @@ requirements:
     - libfido2
     - if: linux
       then: libudev
+    - if: osx
+      then:
+        - openssl
+        - libcbor
 
 tests:
   - script:
