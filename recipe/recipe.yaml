@@ -38,7 +38,8 @@ requirements:
     - pkg-config
   host:
     - libfido2
-    - libudev  # [linux]
+    - if: linux
+      then: libudev
 
 tests:
   - script:
