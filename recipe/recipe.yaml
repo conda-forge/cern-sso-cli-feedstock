@@ -1,5 +1,5 @@
 context:
-  version: "0.31.0"
+  version: "0.31.1"
 
 package:
   name: cern-sso-cli
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/clelange/cern-sso-cli/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: 3b8e61f71d2b7a11ba82202bbabbcb704c1a7bfda84a8dda0f584c8cf1dbfaaf
+  sha256: 4149825b4542979ad370201530ea0408fda5b9f887386cd97bcbd3fe8c071e61
   target_directory: src
 
 build:
