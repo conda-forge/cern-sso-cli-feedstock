@@ -53,7 +53,7 @@ requirements:
     - ${{ compiler('c') }}
     - ${{ stdlib('c') }}
     - go-licenses
-    - pkg-config
+    - pkgconf
   host:
     - libfido2
     - if: linux
