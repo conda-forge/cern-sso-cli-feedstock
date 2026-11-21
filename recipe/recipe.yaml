@@ -1,5 +1,5 @@
 context:
-  version: "0.32.4"
+  version: "0.32.5"
 
 package:
   name: cern-sso-cli
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/clelange/cern-sso-cli/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: 96f531245415cb7c32b9a5d5b16547e9ab5e2f194cb696834a7073e45017cdaa
+  sha256: b921e0c83066a9cd66d46d6730ea4d31815193b4191e6956e8250cf6e8251b58
   target_directory: src
 
 build:
@@ -53,7 +53,7 @@ requirements:
     - ${{ compiler('c') }}
     - ${{ stdlib('c') }}
     - go-licenses
-    - pkg-config
+    - pkgconf
   host:
     - libfido2
     - if: linux
